@@ -1,6 +1,7 @@
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
+from datetime import datetime
  
 # User Agent
 HEADERS = {
@@ -19,8 +20,13 @@ def fetch_url(url):
     except requests.exceptions.RequestException as e:
         print(f"Error fetching URL: {e}")
         return None
+    except Exception as e:
+        print(f"An error occured during scrapping: {e}")
+        return None
 
 def extract_products_detail(product):
+    timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S:%f")
+
     product_detail = product.find("div", class_="product-details")
     title = product_detail.find("h3").text
     price_container = product_detail.find("div", class_="price-container")
@@ -45,7 +51,8 @@ def extract_products_detail(product):
         "Rating": rating,
         "Colors": colors,
         "Size": size,
-        "Gender": gender
+        "Gender": gender,
+        "Timestamp": timestamp
     }
 
 def scrape_products(url):
@@ -63,28 +70,3 @@ def scrape_products(url):
             product_details = extract_products_detail(product)
             data.append(product_details)
     return data
-    
-def main():
-    base_url = "https://fashion-studio.dicoding.dev"
-    all_data = []
-
-    for page in range(1, 51):
-        print(f"Scraping page {page}...")
-        if page == 1:
-            url = base_url
-        else:
-            url = f"{base_url}/page{page}"
-        
-        data = scrape_products(url)
-        if data:
-            all_data.extend(data)
-    
-    if all_data:
-        df = pd.DataFrame(all_data)
-        df.to_csv("products.csv", index=False)
-        print(df.head())
-    else:
-        print("Failed to scrape products.")
-    
-if __name__ == "__main__":
-    main()
