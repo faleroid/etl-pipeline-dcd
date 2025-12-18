@@ -1,4 +1,8 @@
 import pandas as pd
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from utils.extract import scrape_products
 from utils.transform import transform_data
@@ -7,9 +11,9 @@ from utils.load import load_to_postgres
 from utils.load import load_to_csv
 from utils.load import load_to_spreadsheet
 
-base_url = "https://fashion-studio.dicoding.dev"
-postgres_url = "postgresql://dev:pw123@localhost:5432/fashion_db"
-exchange_rate = 16000
+base_url = os.getenv("BASE_URL")
+postgres_url = os.getenv("POSTGRES_URL")
+exchange_rate = int(os.getenv("EXCHANGE_RATE"))
 all_data = []
 
 for page in range(1, 51):
@@ -29,7 +33,7 @@ if all_data:
     df = cleaned_data(df)
     load_to_postgres(df, db_url=postgres_url)
     load_to_csv(df, file_path="products.csv")
-    load_to_spreadsheet(df, file_path="products.xlsx")
+    load_to_spreadsheet(df)
     print(df.head())
 else:
     print("Failed to scrape products.")

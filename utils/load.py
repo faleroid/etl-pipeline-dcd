@@ -1,5 +1,15 @@
 from sqlalchemy import create_engine
 import pandas as pd
+import os
+from google.oauth2.service_account import Credentials
+from googleapiclient.discovery import build
+
+SERVICE_ACCOUNT_FILE = './google-sheets-api.json'
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
+credential = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
+
+SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
+RANGE_NAME = os.getenv("RANGE_NAME")
 
 def load_to_postgres(df, db_url):
     try:
@@ -18,9 +28,15 @@ def load_to_csv(df, file_path):
     except Exception as e:
         print(f"Terjadi kesalahan: {e}")
 
-def load_to_spreadsheet(df, file_path):
+def load_to_spreadsheet(df):
     try:
-        df.to_excel(file_path, index=False, engine='openpyxl')
-        print("Data berhasil disimpan ke file Excel")
+        service = build('sheets', 'v4', credentials=credential)
+        service.spreadsheets().values().update(
+            spreadsheetId=SPREADSHEET_ID,
+            range=RANGE_NAME,
+            valueInputOption='RAW',
+            body={'values': df.values.tolist()}
+        ).execute()
+        print("Data berhasil dimuat ke Google Sheets")
     except Exception as e:
         print(f"Terjadi kesalahan: {e}")
