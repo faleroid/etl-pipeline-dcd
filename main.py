@@ -1,9 +1,3 @@
-import pandas as pd
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
 from utils.extract import scrape_products
 from utils.transform import transform_data
 from utils.transform import cleaned_data
@@ -11,9 +5,9 @@ from utils.load import load_to_postgres
 from utils.load import load_to_csv
 from utils.load import load_to_spreadsheet
 
-base_url = os.getenv("BASE_URL")
-postgres_url = os.getenv("POSTGRES_URL")
-exchange_rate = int(os.getenv("EXCHANGE_RATE"))
+base_url = "https://fashion-studio.dicoding.dev"
+postgres_url = "postgresql://dev:pw123@localhost:5432/fashion_db"
+exchange_rate = 16000
 all_data = []
 
 for page in range(1, 51):

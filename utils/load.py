@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine
 import pandas as pd
-import os
 from google.oauth2.service_account import Credentials
 from googleapiclient.discovery import build
 
@@ -8,8 +7,8 @@ SERVICE_ACCOUNT_FILE = './google-sheets-api.json'
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 credential = Credentials.from_service_account_file(SERVICE_ACCOUNT_FILE, scopes=SCOPES)
 
-SPREADSHEET_ID = os.getenv("SPREADSHEET_ID")
-RANGE_NAME = os.getenv("RANGE_NAME")
+SPREADSHEET_ID = '1oY_cgvRV9uk4OcFitaSX2um8ZjgmpRNDU49QLdVeFrI'
+RANGE_NAME = 'Sheet1!A2:G868'
 
 def load_to_postgres(df, db_url):
     try:
