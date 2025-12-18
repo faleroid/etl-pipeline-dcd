@@ -1,3 +1,4 @@
 .env
 *.csv
+*.ipynb
 google-sheets-api.json

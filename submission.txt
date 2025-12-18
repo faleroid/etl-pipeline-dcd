@@ -1,0 +1,11 @@
+# Menjalankan skrip ETL Pipeline
+python main.py
+
+# Menjalankan unit test pada folder tests
+python -m pytest tests
+
+# Menjalankan test coverage pada folder tests
+python -m pytest tests --cov --cov-report=html
+
+# Url Google Sheets:
+https://docs.google.com/spreadsheets/d/1oY_cgvRV9uk4OcFitaSX2um8ZjgmpRNDU49QLdVeFrI/edit?usp=sharing
